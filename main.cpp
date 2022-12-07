@@ -9,28 +9,20 @@ struct ListNode {
     ListNode(int x, ListNode* next) : val(x), next(next) {}
 };
 
-class SingleLinkedList {
+class SinglyLinkedList {
 public:
-    ListNode* head;
-    ListNode* tail;
-
-    SingleLinkedList() {
-        head = nullptr;
-        tail = nullptr;
-    }
+    ListNode* head{ nullptr };
+    ListNode* tail{ nullptr };
 
     void InsertNode(ListNode* new_node, int x);
-
     void PrependNode(ListNode* new_node, int x);
-
     void DeleteNode(int x);
-
     void InsertAfterNode(ListNode* current_node, ListNode* new_node, int x);
-
     void RemoveAfterNode(ListNode* current_node);
+    void TraverseList();
 };
 
-void SingleLinkedList::InsertNode(ListNode* new_node, int x) {
+void SinglyLinkedList::InsertNode(ListNode* new_node, int x) {
 
     new_node->val = x;
     new_node->next = nullptr;
@@ -50,7 +42,7 @@ void SingleLinkedList::InsertNode(ListNode* new_node, int x) {
 
 }
 
-void SingleLinkedList::PrependNode(ListNode* new_node, int x) {
+void SinglyLinkedList::PrependNode(ListNode* new_node, int x) {
 
     new_node->val = x;
     new_node->next = nullptr;
@@ -70,11 +62,27 @@ void SingleLinkedList::PrependNode(ListNode* new_node, int x) {
 
 }
 
-void SingleLinkedList::DeleteNode(int x) {
+void SinglyLinkedList::DeleteNode(int x) {
 
+	ListNode* current_node = this->head;
+    
+    while (current_node) {
+        
+        if (current_node->val == x) {
+            
+			ListNode* temp = current_node->next;
+            current_node->val = temp->val;
+			current_node->next = temp->next;
+            delete temp;
+            break;
+        }
+
+		current_node = current_node->next;
+    }
+    
 }
 
-void SingleLinkedList::InsertAfterNode(ListNode* current_node, ListNode* new_node, int x) {
+void SinglyLinkedList::InsertAfterNode(ListNode* current_node, ListNode* new_node, int x) {
 
     new_node->val = x;
 
@@ -98,8 +106,7 @@ void SingleLinkedList::InsertAfterNode(ListNode* current_node, ListNode* new_nod
 
 }
 
-void SingleLinkedList::RemoveAfterNode(ListNode* current_node) {
-
+void SinglyLinkedList::RemoveAfterNode(ListNode* current_node) {
 
     // If head exists and we pass in a null new node, remove the head node. 
     if (current_node == nullptr && this->head != nullptr) {
@@ -112,7 +119,7 @@ void SingleLinkedList::RemoveAfterNode(ListNode* current_node) {
         }
 
     }
-    else if (current_node->next) {
+	else if (current_node->next) { // If the node after the current node is not null
 
         ListNode* temp = current_node->next->next;
         current_node->next = temp;
@@ -125,11 +132,19 @@ void SingleLinkedList::RemoveAfterNode(ListNode* current_node) {
     
 }
 
+void SinglyLinkedList::TraverseList() {
+    
+	ListNode* curr = this->head;
+
+	while (curr) {
+		std::cout << curr->val << std::endl;
+        curr = curr->next;
+	}
+}
+
 int main() {
 
-    SingleLinkedList* List = new SingleLinkedList;
-    printf("Head is initially null %p\n", List->head);
-    printf("Tail is initially null %p\n", List->tail);
+    SinglyLinkedList* List = new SinglyLinkedList;
 
     ListNode* a = new ListNode;
     ListNode* b = new ListNode;
@@ -142,17 +157,10 @@ int main() {
     List->InsertNode(c, 3);
     List->InsertNode(d, 4);
     List->InsertNode(e, 5);
+    List->InsertNode(e, 6);
 
-    List->RemoveAfterNode(nullptr);
     
-
-    ListNode* curr = List->head;
-    while (curr) {
-        printf("Val %i\n", curr->val);
-        curr = curr->next;
-    }
+	List->TraverseList();
     
-    
-    system("pause");
 	return 0;
 }
